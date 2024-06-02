@@ -1,17 +1,17 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
+import { ProfilesModule } from './profiles/profiles.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthMiddleware } from '../middleware/auth.middleware';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
-import { RabbitmqModule } from './rabbitmq.module';
+import { RabbitmqModule } from './rabbitMQ/rabbitmq.module';
 import { MessageModule } from './messages/message.module';
 
 @Module({
   imports: [
-    UsersModule,
+    ProfilesModule,
     AuthModule,
     PassportModule,
     MessageModule,
@@ -30,5 +30,6 @@ export class AppModule implements NestModule {
     consumer.apply(AuthMiddleware).forRoutes('/api/updateProfile');
     consumer.apply(AuthMiddleware).forRoutes('/api/sendMessage');
     consumer.apply(AuthMiddleware).forRoutes('/api/receiveMessages');
+    consumer.apply(AuthMiddleware).forRoutes('/api/findNearby');
   }
 }

@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PrismaClient, User, Profile } from '@prisma/client';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import axios from 'axios';
 
 @Injectable()
-export class UsersService {
+export class ProfilesService {
   constructor(private prisma: PrismaClient) {}
 
   async getAllUsers(): Promise<User[]> {
@@ -27,6 +28,16 @@ export class UsersService {
       profilePic,
     } = createProfileDto;
 
+    const location = await axios.get(
+      `https://api.ipgeolocation.io/ipgeo?apiKey=${process.env.IP_API_KEY}`,
+    );
+
+    const { latitude, longitude } = location.data;
+
+    if (!latitude || !longitude) {
+      throw new Error('Failed to get location');
+    }
+
     try {
       return this.prisma.profile.create({
         data: {
@@ -39,6 +50,8 @@ export class UsersService {
           weight,
           interests,
           profilePic,
+          longitude: longitude,
+          latitude: latitude,
           user: {
             connect: {
               id: userId,
@@ -127,5 +140,33 @@ export class UsersService {
         profilePic,
       },
     });
+  }
+
+  async findNearbyProfiles(
+    latitude: number,
+    longitude: number,
+    radius: number,
+  ): Promise<Profile[]> {
+    const degreePerKilometer = 1 / 111;
+    const radiusInDegrees = radius * degreePerKilometer;
+    const profiles = await this.prisma.profile.findMany({
+      where: {
+        AND: [
+          {
+            latitude: {
+              gte: String(latitude - radiusInDegrees),
+              lte: String(latitude + radiusInDegrees),
+            },
+          },
+          {
+            longitude: {
+              gte: String(longitude - radiusInDegrees),
+              lte: String(longitude + radiusInDegrees),
+            },
+          },
+        ],
+      },
+    });
+    return profiles;
   }
 }

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
+import { ProfilesService } from './profiles.service';
+import { ProfilesController } from './profiles.controller';
 import { PrismaClient } from '@prisma/client';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -22,7 +22,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
   ],
-  controllers: [UsersController],
-  providers: [UsersService, PrismaClient, JwtAuthGuard, JwtStrategy],
+  controllers: [ProfilesController],
+  providers: [ProfilesService, PrismaClient, JwtAuthGuard, JwtStrategy],
 })
-export class UsersModule {}
+export class ProfilesModule {}

@@ -42,4 +42,10 @@ export class CreateProfileDto {
   @IsString()
   @IsOptional()
   profilePic: string;
+
+  @IsOptional()
+  latitude: number;
+
+  @IsOptional()
+  longitude: number;
 }

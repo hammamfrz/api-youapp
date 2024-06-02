@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { RabbitmqService } from '../rabbitmq.service';
+import { RabbitmqService } from '../rabbitMQ/rabbitmq.service';
 
 @Injectable()
 export class MessageService {

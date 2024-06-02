@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MessageService } from './messages.service';
 import { MessageController } from './messages.controller';
-import { RabbitmqModule } from '../rabbitmq.module';
+import { RabbitmqModule } from '../rabbitMQ/rabbitmq.module';
 import { PrismaClient } from '@prisma/client';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
